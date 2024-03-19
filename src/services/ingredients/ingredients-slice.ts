@@ -22,6 +22,8 @@ export const ingredientSlice = createSlice({
     }
   },
   selectors: {
+    getIngredientsLoading: (state) => state.isIngredientsLoading,
+    getIngredients: (state) => state.ingredients,
     getIngredientsBuns: (state) =>
       state.ingredients.filter((ingredient) => ingredient.type === 'bun'),
     getIngredientsMains: (state) =>
@@ -30,8 +32,11 @@ export const ingredientSlice = createSlice({
       state.ingredients.filter((ingredient) => ingredient.type === 'sauce')
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchIngredients.fulfilled, (state, action) => {
+    builder.addCase(fetchIngredients.pending, (state) => {
       state.isIngredientsLoading = true;
+    });
+    builder.addCase(fetchIngredients.fulfilled, (state, action) => {
+      state.isIngredientsLoading = false;
       state.ingredients = action.payload;
     });
   }
@@ -42,5 +47,10 @@ export const { setIsIngredientsLoading, setIngredients } =
 
 export default ingredientSlice.reducer;
 
-export const { getIngredientsBuns, getIngredientsMains, getIngredientsSauces } =
-  ingredientSlice.selectors;
+export const {
+  getIngredientsLoading,
+  getIngredients,
+  getIngredientsBuns,
+  getIngredientsMains,
+  getIngredientsSauces
+} = ingredientSlice.selectors;
