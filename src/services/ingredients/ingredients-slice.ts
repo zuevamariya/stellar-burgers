@@ -1,11 +1,14 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { fetchIngredients } from './ingredients-action';
 import { TIngredient } from '@utils-types';
+import { stat } from 'fs';
 
-const initialState: {
+interface IInitialState {
   isIngredientsLoading: boolean;
   ingredients: TIngredient[];
-} = {
+}
+
+const initialState: IInitialState = {
   isIngredientsLoading: false,
   ingredients: []
 };
