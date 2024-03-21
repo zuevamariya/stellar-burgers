@@ -2,14 +2,14 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 import { fetchFeeds } from './feed-action';
 
-interface IInitialState {
+type TFeeds = {
   isIngredientsLoading: boolean;
   orders: TOrder[];
   total: number;
   totalToday: number;
-}
+};
 
-const initialState: IInitialState = {
+const initialState: TFeeds = {
   isIngredientsLoading: false,
   orders: [],
   total: 0,

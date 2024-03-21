@@ -2,12 +2,12 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { TIngredient } from '@utils-types';
 import { produce } from 'immer';
 
-interface IBurgerConstructor {
+type TBurgerConstructor = {
   bun: TIngredient;
   ingredients: TIngredient[];
-}
+};
 
-const initialState: IBurgerConstructor = {
+const initialState: TBurgerConstructor = {
   bun: {
     _id: '',
     name: '',
@@ -41,13 +41,20 @@ const sliceBurgerConstructor = createSlice({
     getBun: (state) => state.bun,
     getIngredients: (state) => state.ingredients,
     getBunId: (state) => state.bun._id,
-    getBunPrice: (state) => state.bun.price
+    getBunPrice: (state) => state.bun.price,
+    getIngredientsId: (state) =>
+      state.ingredients.map((ingredient) => ingredient._id)
   }
 });
 
 export default sliceBurgerConstructor.reducer;
 
-export const { getBun, getIngredients, getBunId, getBunPrice } =
-  sliceBurgerConstructor.selectors;
+export const {
+  getBun,
+  getIngredients,
+  getBunId,
+  getBunPrice,
+  getIngredientsId
+} = sliceBurgerConstructor.selectors;
 
 export const { addIngredient } = sliceBurgerConstructor.actions;

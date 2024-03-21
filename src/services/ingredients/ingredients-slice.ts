@@ -3,12 +3,12 @@ import { fetchIngredients } from './ingredients-action';
 import { TIngredient } from '@utils-types';
 import { stat } from 'fs';
 
-interface IInitialState {
+type TIngredients = {
   isIngredientsLoading: boolean;
   ingredients: TIngredient[];
-}
+};
 
-const initialState: IInitialState = {
+const initialState: TIngredients = {
   isIngredientsLoading: false,
   ingredients: []
 };

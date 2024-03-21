@@ -1,11 +1,20 @@
 import { FC, useMemo } from 'react';
-import { TConstructorIngredient, TIngredient } from '@utils-types';
+import { TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { useSelector } from './/..//../services/store';
+import { useSelector, useDispatch } from './/..//../services/store';
 import {
   getBun,
-  getIngredients
+  getBunId,
+  getIngredients,
+  getIngredientsId
 } from './/..//../services/burger-constructor/burger-constructor-slice';
+import {
+  getOrder,
+  getOrderRequest
+} from './/..//../services/order/order-slice';
+import { getUser } from './/..//../services/user/user-slice';
+import { useNavigate } from 'react-router-dom';
+import { fetchOrderBurger } from './/..//../services/order/order-action';
 
 export const BurgerConstructor: FC = () => {
   const constructorItems = {
@@ -13,12 +22,26 @@ export const BurgerConstructor: FC = () => {
     ingredients: useSelector(getIngredients)
   };
 
-  const orderRequest = false;
+  const orderRequest = useSelector(getOrderRequest);
 
-  const orderModalData = null;
+  const orderModalData = useSelector(getOrder);
+
+  const navigate = useNavigate();
+
+  const user = useSelector(getUser);
+  const bunId = useSelector(getBunId);
+  const ingredientsId = useSelector(getIngredientsId);
+  const orderId = [bunId].concat(ingredientsId);
+  const dispatch = useDispatch();
 
   const onOrderClick = () => {
+    console.log('Clicked onOrderClick');
     if (!constructorItems.bun || orderRequest) return;
+    if (!user) {
+      navigate('/login');
+    } else {
+      dispatch(fetchOrderBurger(orderId));
+    }
   };
   const closeOrderModal = () => {};
 
