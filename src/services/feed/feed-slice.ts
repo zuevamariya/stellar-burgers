@@ -3,14 +3,12 @@ import { TOrder } from '@utils-types';
 import { fetchFeeds } from './feed-action';
 
 type TFeeds = {
-  isIngredientsLoading: boolean;
   orders: TOrder[];
   total: number;
   totalToday: number;
 };
 
 const initialState: TFeeds = {
-  isIngredientsLoading: false,
   orders: [],
   total: 0,
   totalToday: 0
@@ -20,9 +18,6 @@ export const feedSlice = createSlice({
   name: 'feeds',
   initialState,
   reducers: {
-    setIsLoading: (state, action: PayloadAction<boolean>) => {
-      state.isIngredientsLoading = action.payload;
-    },
     setFeeds: (state, action: PayloadAction<TOrder[]>) => {
       state.orders = action.payload;
     },
@@ -43,11 +38,7 @@ export const feedSlice = createSlice({
     })
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchFeeds.pending, (state) => {
-      state.isIngredientsLoading = true;
-    });
     builder.addCase(fetchFeeds.fulfilled, (state, action) => {
-      state.isIngredientsLoading = false;
       state.orders = action.payload.orders;
       state.total = action.payload.total;
       state.totalToday = action.payload.totalToday;
@@ -55,8 +46,9 @@ export const feedSlice = createSlice({
   }
 });
 
-export const { setIsLoading, setFeeds, setTotal, setTotalToday } =
-  feedSlice.actions;
+export const { setFeeds, setTotal, setTotalToday } = feedSlice.actions;
+
 export default feedSlice.reducer;
+
 export const { getFeeds, getTotal, getTotalToday, getTotalFeeds } =
   feedSlice.selectors;

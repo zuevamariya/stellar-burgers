@@ -1,16 +1,17 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { fetchIngredients } from './ingredients-action';
 import { TIngredient } from '@utils-types';
-import { stat } from 'fs';
 
 type TIngredients = {
   isIngredientsLoading: boolean;
   ingredients: TIngredient[];
+  ingredientId: TIngredient | null;
 };
 
 const initialState: TIngredients = {
   isIngredientsLoading: false,
-  ingredients: []
+  ingredients: [],
+  ingredientId: null
 };
 
 export const ingredientSlice = createSlice({
@@ -22,6 +23,12 @@ export const ingredientSlice = createSlice({
     },
     setIngredients: (state, action: PayloadAction<TIngredient[]>) => {
       state.ingredients = action.payload;
+    },
+    setIngredientId: (state, action: PayloadAction<string>) => {
+      state.ingredientId =
+        state.ingredients.find(
+          (ingredient) => ingredient._id === action.payload
+        ) || null;
     }
   },
   selectors: {
@@ -32,7 +39,8 @@ export const ingredientSlice = createSlice({
     getIngredientsMains: (state) =>
       state.ingredients.filter((ingredient) => ingredient.type === 'main'),
     getIngredientsSauces: (state) =>
-      state.ingredients.filter((ingredient) => ingredient.type === 'sauce')
+      state.ingredients.filter((ingredient) => ingredient.type === 'sauce'),
+    getingredientData: (state) => state.ingredientId
   },
   extraReducers: (builder) => {
     builder.addCase(fetchIngredients.pending, (state) => {
@@ -45,7 +53,7 @@ export const ingredientSlice = createSlice({
   }
 });
 
-export const { setIsIngredientsLoading, setIngredients } =
+export const { setIsIngredientsLoading, setIngredients, setIngredientId } =
   ingredientSlice.actions;
 
 export default ingredientSlice.reducer;
@@ -55,5 +63,6 @@ export const {
   getIngredients,
   getIngredientsBuns,
   getIngredientsMains,
-  getIngredientsSauces
+  getIngredientsSauces,
+  getingredientData
 } = ingredientSlice.selectors;

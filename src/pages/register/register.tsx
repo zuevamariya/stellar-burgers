@@ -1,8 +1,8 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { RegisterUI } from '@ui-pages';
-import { useDispatch, useSelector } from './/..//..//services/store';
-import { TRegisterData } from '@api';
+import { useDispatch } from './/..//..//services/store';
 import { fetchRegister } from '../../services/user/user-action';
+import { savePassword } from '../../services/user/user-slice';
 
 export const Register: FC = () => {
   const [userName, setUserName] = useState('');
@@ -12,12 +12,12 @@ export const Register: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    const data: TRegisterData = {
-      email: email,
-      name: userName,
-      password: password
-    };
+    const data = { name: userName, email: email, password: password };
     dispatch(fetchRegister(data));
+    dispatch(savePassword(password));
+    setUserName('');
+    setEmail('');
+    setPassword('');
   };
 
   return (

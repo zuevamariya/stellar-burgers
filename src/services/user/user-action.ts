@@ -8,12 +8,13 @@ import {
 } from '@api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setIsAuthChecked, setUser } from './user-slice';
+import { deleteCookie, getCookie, setCookie } from './/..//../utils/cookie';
 
 export const fetchRegister = createAsyncThunk(
   'register/fetchRegister',
-  async (data: TRegisterData) => {
-    const response = await registerUserApi(data);
-    localStorage.setItem('accessToken', response.accessToken);
+  async ({ email, name, password }: TRegisterData) => {
+    const response = await registerUserApi({ email, name, password });
+    setCookie('accessToken', response.accessToken);
     localStorage.setItem('refreshToken', response.refreshToken);
     return response.user;
   }
@@ -23,7 +24,7 @@ export const fetchLogin = createAsyncThunk(
   'login/fetchLogin',
   async (data: TLoginData) => {
     const response = await loginUserApi(data);
-    localStorage.setItem('accessToken', response.accessToken);
+    setCookie('accessToken', response.accessToken);
     localStorage.setItem('refreshToken', response.refreshToken);
     return response.user;
   }
@@ -32,12 +33,14 @@ export const fetchLogin = createAsyncThunk(
 export const checkUserAuth = createAsyncThunk(
   'auth/checkAuth',
   async (_, { dispatch }) => {
-    if (localStorage.getItem('accessToken')) {
+    if (getCookie('accessToken')) {
+      console.log('accessToken есть в куке');
       getUserApi()
         .then((response) => dispatch(setUser(response.user)))
         .catch(() => {
-          localStorage.removeItem('accessToken');
+          deleteCookie('accessToken');
           localStorage.removeItem('refreshToken');
+          console.log('accessToken и refreshToken удалены');
         })
         .finally(() => dispatch(setIsAuthChecked(true)));
     } else {
@@ -48,6 +51,6 @@ export const checkUserAuth = createAsyncThunk(
 
 export const logout = createAsyncThunk('auth/logout', async () => {
   await logoutApi();
-  localStorage.removeItem('accessToken');
+  deleteCookie('accessToken');
   localStorage.removeItem('refreshToken');
 });

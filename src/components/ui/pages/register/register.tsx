@@ -31,7 +31,9 @@ export const RegisterUI: FC<RegisterUIProps> = ({
             <Input
               type='text'
               placeholder='Имя'
-              onChange={(e) => setUserName(e.target.value)}
+              onChange={(e) => {
+                setUserName(e.target.value);
+              }}
               value={userName}
               name='name'
               error={false}

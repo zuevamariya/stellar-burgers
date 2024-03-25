@@ -5,11 +5,13 @@ import { fetchLogin, fetchRegister, logout } from './user-action';
 type TRegisterLogin = {
   isAuthChecked: boolean;
   user: TUser | null;
+  password: string | null;
 };
 
 const initialState: TRegisterLogin = {
   isAuthChecked: false,
-  user: null
+  user: null,
+  password: null
 };
 
 const sliceUser = createSlice({
@@ -21,10 +23,16 @@ const sliceUser = createSlice({
     },
     setIsAuthChecked: (state, action: PayloadAction<boolean>) => {
       state.isAuthChecked = action.payload;
+    },
+    savePassword: (state, action: PayloadAction<string>) => {
+      state.password = action.payload;
     }
   },
   selectors: {
     getUser: (state) => state.user,
+    getUserName: (state) => state.user?.name,
+    getUserEmail: (state) => state.user?.email,
+    getUserPassword: (state) => state.password,
     getIsAuthChecked: (state) => state.isAuthChecked
   },
   extraReducers: (builder) => {
@@ -44,6 +52,12 @@ const sliceUser = createSlice({
 
 export default sliceUser.reducer;
 
-export const { getUser, getIsAuthChecked } = sliceUser.selectors;
+export const {
+  getIsAuthChecked,
+  getUserName,
+  getUserEmail,
+  getUserPassword,
+  getUser
+} = sliceUser.selectors;
 
-export const { setUser, setIsAuthChecked } = sliceUser.actions;
+export const { setUser, setIsAuthChecked, savePassword } = sliceUser.actions;

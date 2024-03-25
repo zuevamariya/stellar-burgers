@@ -29,19 +29,63 @@ const sliceBurgerConstructor = createSlice({
   initialState,
   reducers: {
     addIngredient: (state, action: PayloadAction<TIngredient>) =>
-      produce(state, (draft) => {
+      produce(state, (field) => {
         if (action.payload.type === 'bun') {
-          draft.bun = action.payload;
+          field.bun = action.payload;
         } else {
-          draft.ingredients.push(action.payload);
+          field.ingredients.push(action.payload);
         }
-      })
+      }),
+    removeIngredient: (state, action: PayloadAction<TIngredient>) =>
+      produce(state, (field) => {
+        if (action.payload.type !== 'bun') {
+          const index = field.ingredients.findIndex(
+            (ingredient) => ingredient._id === action.payload._id
+          );
+          field.ingredients.splice(index, 1);
+        }
+      }),
+    moveUpIngredient: (state, action: PayloadAction<TIngredient>) => {
+      const index = state.ingredients.findIndex(
+        (ingredient) => ingredient._id === action.payload._id
+      );
+      if (index > 0) {
+        const ingredients = [...state.ingredients];
+        const pick = ingredients[index];
+        ingredients[index] = ingredients[index - 1];
+        ingredients[index - 1] = pick;
+
+        return produce(state, (field) => {
+          field.ingredients = ingredients;
+        });
+      }
+    },
+    moveDownIngredient: (state, action: PayloadAction<TIngredient>) => {
+      const index = state.ingredients.findIndex(
+        (ingredient) => ingredient._id === action.payload._id
+      );
+      if (index < state.ingredients.length - 1) {
+        const ingredients = [...state.ingredients];
+        const pick = ingredients[index];
+        ingredients[index] = ingredients[index + 1];
+        ingredients[index + 1] = pick;
+
+        return produce(state, (field) => {
+          field.ingredients = ingredients;
+        });
+      }
+    },
+    clearIngredients: (state) => {
+      state.ingredients = initialState.ingredients;
+      state.bun = initialState.bun;
+    }
   },
   selectors: {
     getBun: (state) => state.bun,
-    getIngredients: (state) => state.ingredients,
     getBunId: (state) => state.bun._id,
     getBunPrice: (state) => state.bun.price,
+    getIngredients: (state) => state.ingredients,
+
     getIngredientsId: (state) =>
       state.ingredients.map((ingredient) => ingredient._id)
   }
@@ -57,4 +101,10 @@ export const {
   getIngredientsId
 } = sliceBurgerConstructor.selectors;
 
-export const { addIngredient } = sliceBurgerConstructor.actions;
+export const {
+  addIngredient,
+  removeIngredient,
+  moveUpIngredient,
+  moveDownIngredient,
+  clearIngredients
+} = sliceBurgerConstructor.actions;
