@@ -19,6 +19,8 @@ import { useEffect } from 'react';
 import { fetchIngredients } from '../../services/ingredients/ingredients-action';
 import { checkUserAuth } from '../../services/user/user-action';
 import { OnlyAuth, OnlyUnAuth } from '../protected-route';
+import { clearOrderData } from './/..//../services/order/order-slice';
+import { deleteOrderIngredients } from './/..//../services/ingredients/ingredients-slice';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -82,6 +84,8 @@ const App = () => {
               <Modal
                 title={''}
                 onClose={function (): void {
+                  dispatch(clearOrderData());
+                  dispatch(deleteOrderIngredients());
                   navigate('/feed');
                 }}
               >

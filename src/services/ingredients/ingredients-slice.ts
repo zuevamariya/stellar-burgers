@@ -6,12 +6,14 @@ type TIngredients = {
   isIngredientsLoading: boolean;
   ingredients: TIngredient[];
   ingredientId: TIngredient | null;
+  orderIngredientsById: TIngredient[];
 };
 
 const initialState: TIngredients = {
   isIngredientsLoading: false,
   ingredients: [],
-  ingredientId: null
+  ingredientId: null,
+  orderIngredientsById: []
 };
 
 export const ingredientSlice = createSlice({
@@ -29,6 +31,18 @@ export const ingredientSlice = createSlice({
         state.ingredients.find(
           (ingredient) => ingredient._id === action.payload
         ) || null;
+    },
+    setOrderIngredientsById: (state, action: PayloadAction<string[]>) => {
+      action.payload.forEach((id) => {
+        state.ingredients.forEach((ingredient) => {
+          if (ingredient._id === id) {
+            state.orderIngredientsById.push(ingredient);
+          }
+        });
+      });
+    },
+    deleteOrderIngredients: (state) => {
+      state.orderIngredientsById = [];
     }
   },
   selectors: {
@@ -40,7 +54,8 @@ export const ingredientSlice = createSlice({
       state.ingredients.filter((ingredient) => ingredient.type === 'main'),
     getIngredientsSauces: (state) =>
       state.ingredients.filter((ingredient) => ingredient.type === 'sauce'),
-    getingredientData: (state) => state.ingredientId
+    getingredientData: (state) => state.ingredientId,
+    getOrderIngredientsById: (state) => state.orderIngredientsById
   },
   extraReducers: (builder) => {
     builder.addCase(fetchIngredients.pending, (state) => {
@@ -53,8 +68,13 @@ export const ingredientSlice = createSlice({
   }
 });
 
-export const { setIsIngredientsLoading, setIngredients, setIngredientId } =
-  ingredientSlice.actions;
+export const {
+  setIsIngredientsLoading,
+  setIngredients,
+  setIngredientId,
+  setOrderIngredientsById,
+  deleteOrderIngredients
+} = ingredientSlice.actions;
 
 export default ingredientSlice.reducer;
 
@@ -64,5 +84,6 @@ export const {
   getIngredientsBuns,
   getIngredientsMains,
   getIngredientsSauces,
-  getingredientData
+  getingredientData,
+  getOrderIngredientsById
 } = ingredientSlice.selectors;
