@@ -1,10 +1,12 @@
 import {
   TLoginData,
   TRegisterData,
+  getOrdersApi,
   getUserApi,
   loginUserApi,
   logoutApi,
-  registerUserApi
+  registerUserApi,
+  updateUserApi
 } from '@api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setIsAuthChecked, setUser } from './user-slice';
@@ -16,6 +18,10 @@ export const fetchRegister = createAsyncThunk(
     const response = await registerUserApi({ email, name, password });
     setCookie('accessToken', response.accessToken);
     localStorage.setItem('refreshToken', response.refreshToken);
+    const a = getCookie('accessToken');
+    const b = localStorage.getItem('refreshToken');
+    console.log('Cookie при регистрации', a);
+    console.log('localStorage при регистрации', b);
     return response.user;
   }
 );
@@ -26,6 +32,10 @@ export const fetchLogin = createAsyncThunk(
     const response = await loginUserApi(data);
     setCookie('accessToken', response.accessToken);
     localStorage.setItem('refreshToken', response.refreshToken);
+    const a = getCookie('accessToken');
+    const b = localStorage.getItem('refreshToken');
+    console.log('Cookie при логине', a);
+    console.log('localStorage при логине', b);
     return response.user;
   }
 );
@@ -44,8 +54,29 @@ export const checkUserAuth = createAsyncThunk(
         })
         .finally(() => dispatch(setIsAuthChecked(true)));
     } else {
+      console.log('accessToken нет в куке');
       dispatch(setIsAuthChecked(true));
     }
+  }
+);
+
+export const fetchUpdateUser = createAsyncThunk(
+  'updateUser/fetchupdateUser',
+  async (user: Partial<TRegisterData>, { dispatch }) => {
+    updateUserApi(user)
+      .then((response) => dispatch(setUser(response.user)))
+      .catch(() => {
+        console.log('Введены некорректные данные для обновления профиля!');
+      });
+  }
+);
+
+export const fetchProfileOrders = createAsyncThunk(
+  'profileOrders/fetchProfileOrders',
+  async () => {
+    const response = await getOrdersApi();
+    console.log('заказы пользователя', response);
+    return response;
   }
 );
 

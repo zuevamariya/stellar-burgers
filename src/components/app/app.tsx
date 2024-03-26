@@ -31,7 +31,6 @@ const App = () => {
   useEffect(() => {
     dispatch(fetchIngredients());
     dispatch(checkUserAuth());
-    dispatch(checkUserAuth());
   }, []);
 
   return (
@@ -60,6 +59,10 @@ const App = () => {
           path='/profile/orders'
           element={<OnlyAuth component={<ProfileOrders />} />}
         />
+        <Route
+          path='/profile/orders/:number'
+          element={<OnlyAuth component={<OrderInfo />} />}
+        />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
 
@@ -87,6 +90,21 @@ const App = () => {
                   dispatch(clearOrderData());
                   dispatch(deleteOrderIngredients());
                   navigate('/feed');
+                }}
+              >
+                <OrderInfo />
+              </Modal>
+            }
+          />
+          <Route
+            path='/profile/orders/:number'
+            element={
+              <Modal
+                title={''}
+                onClose={function (): void {
+                  dispatch(clearOrderData());
+                  dispatch(deleteOrderIngredients());
+                  navigate('/profile/orders');
                 }}
               >
                 <OrderInfo />

@@ -14,10 +14,7 @@ export const Login: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    const data: TLoginData = {
-      email: email,
-      password: password
-    };
+    const data = { email: email, password: password };
     dispatch(fetchLogin(data));
     navigate(location.state?.from || '/');
   };
