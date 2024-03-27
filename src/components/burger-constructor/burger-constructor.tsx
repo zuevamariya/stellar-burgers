@@ -18,6 +18,7 @@ import {
 import { getUser } from './/..//../services/user/user-slice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchOrderBurger } from './/..//../services/order/order-action';
+import { fetchFeeds } from './/..//../services/feed/feed-action';
 
 export const BurgerConstructor: FC = () => {
   const location = useLocation();
@@ -43,6 +44,7 @@ export const BurgerConstructor: FC = () => {
       const orderId = [bunId].concat(ingredientsId);
       if (user && !isLoadingRequest) {
         dispatch(fetchOrderBurger(orderId));
+        dispatch(fetchFeeds());
         dispatch(clearIngredients());
       } else {
         navigate('/login');

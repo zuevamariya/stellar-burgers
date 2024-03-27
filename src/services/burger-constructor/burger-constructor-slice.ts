@@ -85,7 +85,6 @@ const sliceBurgerConstructor = createSlice({
     getBunId: (state) => state.bun._id,
     getBunPrice: (state) => state.bun.price,
     getIngredients: (state) => state.ingredients,
-
     getIngredientsId: (state) =>
       state.ingredients.map((ingredient) => ingredient._id)
   }

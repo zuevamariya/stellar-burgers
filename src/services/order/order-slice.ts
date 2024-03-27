@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { TIngredient, TOrder } from '@utils-types';
+import { TOrder } from '@utils-types';
 import { fetchOrderBurger, fetchOrderNumber } from './order-action';
 
 type TOrderBurger = {
@@ -11,6 +11,7 @@ type TOrderBurger = {
   orders: TOrder[];
   orderByNum: TOrder | null;
   orderIngredients: string[];
+  orderNumber: string;
 };
 
 const initialState: TOrderBurger = {
@@ -21,7 +22,8 @@ const initialState: TOrderBurger = {
   error: null,
   orders: [],
   orderByNum: null,
-  orderIngredients: []
+  orderIngredients: [],
+  orderNumber: ''
 };
 
 const orderSlice = createSlice({
@@ -50,6 +52,7 @@ const orderSlice = createSlice({
       state.orders.forEach((order) => {
         if (order.number === Number(action.payload)) {
           state.orderByNum = order;
+          state.orderNumber = `#${action.payload}`;
         }
       });
     },
@@ -62,6 +65,7 @@ const orderSlice = createSlice({
     getOrderRequest: (state) => state.orderRequest,
     getOrder: (state) => state.order,
     getOrderName: (state) => state.name,
+    getOrderNumber: (state) => state.orderNumber,
     getOrderNum: (state) => state.orderByNum,
     getOrderIngredients: (state) =>
       state.orderByNum ? state.orderByNum.ingredients : []
@@ -106,5 +110,6 @@ export const {
   getOrderName,
   getIsLoadingRequest,
   getOrderNum,
-  getOrderIngredients
+  getOrderIngredients,
+  getOrderNumber
 } = orderSlice.selectors;

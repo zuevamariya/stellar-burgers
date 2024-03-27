@@ -29,20 +29,16 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    if (isFormChanged) {
-      dispatch(fetchUpdateUser(formValue));
-    }
+    dispatch(fetchUpdateUser(formValue));
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(
-      fetchUpdateUser({
-        name: user?.name || '',
-        email: user?.email || '',
-        password: ''
-      })
-    );
+    setFormValue({
+      name: user ? user.name : '',
+      email: user ? user.email : '',
+      password: ''
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

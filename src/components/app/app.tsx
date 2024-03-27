@@ -14,12 +14,15 @@ import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import { useEffect } from 'react';
 import { fetchIngredients } from '../../services/ingredients/ingredients-action';
 import { checkUserAuth } from '../../services/user/user-action';
 import { OnlyAuth, OnlyUnAuth } from '../protected-route';
-import { clearOrderData } from './/..//../services/order/order-slice';
+import {
+  clearOrderData,
+  getOrderNumber
+} from './/..//../services/order/order-slice';
 import { deleteOrderIngredients } from './/..//../services/ingredients/ingredients-slice';
 
 const App = () => {
@@ -27,12 +30,12 @@ const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const backgroundLocation = location.state?.background;
+  const orderNumber = useSelector(getOrderNumber);
 
   useEffect(() => {
     dispatch(fetchIngredients());
     dispatch(checkUserAuth());
   }, []);
-
   return (
     <div className={styles.app}>
       <AppHeader />
@@ -58,7 +61,7 @@ const App = () => {
         <Route
           path='/profile/orders'
           element={<OnlyAuth component={<ProfileOrders />} />}
-        />
+        />{' '}
         <Route
           path='/profile/orders/:number'
           element={<OnlyAuth component={<OrderInfo />} />}
@@ -72,7 +75,7 @@ const App = () => {
             path='/ingredients/:id'
             element={
               <Modal
-                title={''}
+                title={'Детали ингредиента'}
                 onClose={function (): void {
                   navigate('/');
                 }}
@@ -85,7 +88,7 @@ const App = () => {
             path='/feed/:number'
             element={
               <Modal
-                title={''}
+                title={orderNumber}
                 onClose={function (): void {
                   dispatch(clearOrderData());
                   dispatch(deleteOrderIngredients());
@@ -100,7 +103,7 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <Modal
-                title={''}
+                title={orderNumber}
                 onClose={function (): void {
                   dispatch(clearOrderData());
                   dispatch(deleteOrderIngredients());

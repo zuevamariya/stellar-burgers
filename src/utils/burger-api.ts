@@ -72,7 +72,6 @@ type TOrdersResponse = TServerResponse<{
 }>;
 
 export const getIngredientsApi = () =>
-  //список ингредиентов для главной страницы
   fetch(`${URL}/ingredients`)
     .then((res) => checkResponse<TIngredientsResponse>(res))
     .then((data) => {
@@ -89,7 +88,6 @@ export const getFeedsApi = () =>
     });
 
 export const getOrdersApi = () =>
-  //заказы сделанные пользователем для профиля
   fetchWithRefresh<TFeedsResponse>(`${URL}/orders`, {
     method: 'GET',
     headers: {
