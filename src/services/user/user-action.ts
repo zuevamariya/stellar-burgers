@@ -52,20 +52,13 @@ export const checkUserAuth = createAsyncThunk(
 export const fetchUpdateUser = createAsyncThunk(
   'updateUser/fetchupdateUser',
   async (user: Partial<TRegisterData>, { dispatch }) => {
-    updateUserApi(user)
-      .then((response) => dispatch(setUser(response.user)))
-      .catch((error) => {
-        console.error('Ошибка при обновлении данных профиля:', error);
-      });
+    updateUserApi(user).then((response) => dispatch(setUser(response.user)));
   }
 );
 
 export const fetchProfileOrders = createAsyncThunk(
   'profileOrders/fetchProfileOrders',
-  async () => {
-    const response = await getOrdersApi();
-    return response;
-  }
+  getOrdersApi
 );
 
 export const logout = createAsyncThunk('auth/logout', async () => {

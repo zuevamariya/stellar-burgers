@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { TIngredient } from '@utils-types';
-import { produce } from 'immer';
 
 type TBurgerConstructor = {
   bun: TIngredient;
@@ -28,23 +27,21 @@ const sliceBurgerConstructor = createSlice({
   name: 'burgerConstructor',
   initialState,
   reducers: {
-    addIngredient: (state, action: PayloadAction<TIngredient>) =>
-      produce(state, (field) => {
-        if (action.payload.type === 'bun') {
-          field.bun = action.payload;
-        } else {
-          field.ingredients.push(action.payload);
-        }
-      }),
-    removeIngredient: (state, action: PayloadAction<TIngredient>) =>
-      produce(state, (field) => {
-        if (action.payload.type !== 'bun') {
-          const index = field.ingredients.findIndex(
-            (ingredient) => ingredient._id === action.payload._id
-          );
-          field.ingredients.splice(index, 1);
-        }
-      }),
+    addIngredient: (state, action: PayloadAction<TIngredient>) => {
+      if (action.payload.type === 'bun') {
+        state.bun = action.payload;
+      } else {
+        state.ingredients.push(action.payload);
+      }
+    },
+    removeIngredient: (state, action: PayloadAction<TIngredient>) => {
+      if (action.payload.type !== 'bun') {
+        const index = state.ingredients.findIndex(
+          (ingredient) => ingredient._id === action.payload._id
+        );
+        state.ingredients.splice(index, 1);
+      }
+    },
     moveUpIngredient: (state, action: PayloadAction<TIngredient>) => {
       const index = state.ingredients.findIndex(
         (ingredient) => ingredient._id === action.payload._id
@@ -54,10 +51,7 @@ const sliceBurgerConstructor = createSlice({
         const pick = ingredients[index];
         ingredients[index] = ingredients[index - 1];
         ingredients[index - 1] = pick;
-
-        return produce(state, (field) => {
-          field.ingredients = ingredients;
-        });
+        state.ingredients = ingredients;
       }
     },
     moveDownIngredient: (state, action: PayloadAction<TIngredient>) => {
@@ -69,10 +63,7 @@ const sliceBurgerConstructor = createSlice({
         const pick = ingredients[index];
         ingredients[index] = ingredients[index + 1];
         ingredients[index + 1] = pick;
-
-        return produce(state, (field) => {
-          field.ingredients = ingredients;
-        });
+        state.ingredients = ingredients;
       }
     },
     clearIngredients: (state) => {
