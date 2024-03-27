@@ -45,7 +45,6 @@ export const BurgerConstructor: FC = () => {
       if (user && !isLoadingRequest) {
         dispatch(fetchOrderBurger(orderId));
         dispatch(fetchFeeds());
-        dispatch(clearIngredients());
       } else {
         navigate('/login');
       }
@@ -54,6 +53,7 @@ export const BurgerConstructor: FC = () => {
 
   const closeOrderModal = () => {
     dispatch(closeModalRequest());
+    dispatch(clearIngredients());
   };
 
   const price = useMemo(

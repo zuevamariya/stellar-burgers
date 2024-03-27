@@ -27,10 +27,11 @@ export const ingredientSlice = createSlice({
       state.ingredients = action.payload;
     },
     setIngredientId: (state, action: PayloadAction<string>) => {
-      state.ingredientId =
-        state.ingredients.find(
-          (ingredient) => ingredient._id === action.payload
-        ) || null;
+      state.ingredients.forEach((ingredient) => {
+        if (ingredient._id === action.payload) {
+          state.ingredientId = ingredient;
+        }
+      });
     },
     setOrderIngredientsById: (state, action: PayloadAction<string[]>) => {
       action.payload.forEach((id) => {
@@ -54,7 +55,7 @@ export const ingredientSlice = createSlice({
       state.ingredients.filter((ingredient) => ingredient.type === 'main'),
     getIngredientsSauces: (state) =>
       state.ingredients.filter((ingredient) => ingredient.type === 'sauce'),
-    getingredientData: (state) => state.ingredientId,
+    getIngredientData: (state) => state.ingredientId,
     getOrderIngredientsById: (state) => state.orderIngredientsById
   },
   extraReducers: (builder) => {
@@ -84,6 +85,6 @@ export const {
   getIngredientsBuns,
   getIngredientsMains,
   getIngredientsSauces,
-  getingredientData,
+  getIngredientData,
   getOrderIngredientsById
 } = ingredientSlice.selectors;
