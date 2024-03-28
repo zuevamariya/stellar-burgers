@@ -34,18 +34,12 @@ const sliceBurgerConstructor = createSlice({
         state.ingredients.push(action.payload);
       }
     },
-    removeIngredient: (state, action: PayloadAction<TIngredient>) => {
-      if (action.payload.type !== 'bun') {
-        const index = state.ingredients.findIndex(
-          (ingredient) => ingredient._id === action.payload._id
-        );
-        state.ingredients.splice(index, 1);
-      }
+    removeIngredient: (state, action: PayloadAction<number>) => {
+      const indexToRemove = action.payload;
+      state.ingredients.splice(indexToRemove, 1);
     },
-    moveUpIngredient: (state, action: PayloadAction<TIngredient>) => {
-      const index = state.ingredients.findIndex(
-        (ingredient) => ingredient._id === action.payload._id
-      );
+    moveUpIngredient: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
       if (index > 0) {
         const ingredients = [...state.ingredients];
         const pick = ingredients[index];
@@ -54,10 +48,8 @@ const sliceBurgerConstructor = createSlice({
         state.ingredients = ingredients;
       }
     },
-    moveDownIngredient: (state, action: PayloadAction<TIngredient>) => {
-      const index = state.ingredients.findIndex(
-        (ingredient) => ingredient._id === action.payload._id
-      );
+    moveDownIngredient: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
       if (index < state.ingredients.length - 1) {
         const ingredients = [...state.ingredients];
         const pick = ingredients[index];
