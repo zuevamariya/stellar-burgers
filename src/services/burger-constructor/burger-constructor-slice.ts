@@ -67,21 +67,14 @@ const sliceBurgerConstructor = createSlice({
     getBun: (state) => state.bun,
     getBunId: (state) => state.bun._id,
     getBunPrice: (state) => state.bun.price,
-    getIngredients: (state) => state.ingredients,
-    getIngredientsId: (state) =>
-      state.ingredients.map((ingredient) => ingredient._id)
+    getIngredients: (state) => state.ingredients
   }
 });
 
 export default sliceBurgerConstructor.reducer;
 
-export const {
-  getBun,
-  getIngredients,
-  getBunId,
-  getBunPrice,
-  getIngredientsId
-} = sliceBurgerConstructor.selectors;
+export const { getBun, getIngredients, getBunId, getBunPrice } =
+  sliceBurgerConstructor.selectors;
 
 export const {
   addIngredient,

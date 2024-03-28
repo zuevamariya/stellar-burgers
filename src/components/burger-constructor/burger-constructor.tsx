@@ -6,8 +6,7 @@ import {
   clearIngredients,
   getBun,
   getBunId,
-  getIngredients,
-  getIngredientsId
+  getIngredients
 } from './/..//../services/burger-constructor/burger-constructor-slice';
 import {
   closeModalRequest,
@@ -16,13 +15,11 @@ import {
   getOrderRequest
 } from './/..//../services/order/order-slice';
 import { getUser } from './/..//../services/user/user-slice';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { fetchOrderBurger } from './/..//../services/order/order-action';
 import { fetchFeeds } from './/..//../services/feed/feed-action';
 
 export const BurgerConstructor: FC = () => {
-  const location = useLocation();
-
   const constructorItems = {
     bun: useSelector(getBun),
     ingredients: useSelector(getIngredients)
@@ -36,7 +33,9 @@ export const BurgerConstructor: FC = () => {
 
   const user = useSelector(getUser);
   const bunId = useSelector(getBunId);
-  const ingredientsId = useSelector(getIngredientsId);
+  const ingredientsId = constructorItems.ingredients.map(
+    (ingredient) => ingredient._id
+  );
   const isLoadingRequest = useSelector(getIsLoadingRequest);
 
   const onOrderClick = () => {

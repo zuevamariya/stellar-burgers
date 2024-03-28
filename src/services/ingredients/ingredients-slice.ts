@@ -49,12 +49,6 @@ export const ingredientSlice = createSlice({
   selectors: {
     getIngredientsLoading: (state) => state.isIngredientsLoading,
     getIngredients: (state) => state.ingredients,
-    getIngredientsBuns: (state) =>
-      state.ingredients.filter((ingredient) => ingredient.type === 'bun'),
-    getIngredientsMains: (state) =>
-      state.ingredients.filter((ingredient) => ingredient.type === 'main'),
-    getIngredientsSauces: (state) =>
-      state.ingredients.filter((ingredient) => ingredient.type === 'sauce'),
     getIngredientData: (state) => state.ingredientId,
     getOrderIngredientsById: (state) => state.orderIngredientsById
   },
@@ -82,9 +76,6 @@ export default ingredientSlice.reducer;
 export const {
   getIngredientsLoading,
   getIngredients,
-  getIngredientsBuns,
-  getIngredientsMains,
-  getIngredientsSauces,
   getIngredientData,
   getOrderIngredientsById
 } = ingredientSlice.selectors;
