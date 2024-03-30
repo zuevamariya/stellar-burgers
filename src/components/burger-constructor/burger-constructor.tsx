@@ -40,7 +40,7 @@ export const BurgerConstructor: FC = () => {
 
   const onOrderClick = () => {
     if (bunId && ingredientsId.length >= 1) {
-      const orderId = [bunId].concat(ingredientsId);
+      const orderId = [bunId].concat(ingredientsId, [bunId]);
       if (user && !isLoadingRequest) {
         dispatch(fetchOrderBurger(orderId));
         dispatch(fetchFeeds());
