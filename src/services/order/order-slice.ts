@@ -6,24 +6,16 @@ type TOrderBurger = {
   isLoadingRequest: boolean;
   orderRequest: boolean;
   order: TOrder | null;
-  name: string;
   error: string | null;
-  orders: TOrder[];
   orderByNum: TOrder | null;
-  orderIngredients: string[];
-  orderNumber: string;
 };
 
 const initialState: TOrderBurger = {
   isLoadingRequest: false,
   orderRequest: false,
   order: null,
-  name: '',
   error: null,
-  orders: [],
-  orderByNum: null,
-  orderIngredients: [],
-  orderNumber: ''
+  orderByNum: null
 };
 
 const orderSlice = createSlice({
@@ -39,36 +31,15 @@ const orderSlice = createSlice({
     setOrder: (state, action: PayloadAction<TOrder>) => {
       state.order = action.payload;
     },
-    setOrderName: (state, action: PayloadAction<string>) => {
-      state.name = action.payload;
-    },
-    setOrderIngredients: (state, action: PayloadAction<string[]>) => {
-      state.orderIngredients = action.payload;
-    },
     closeModalRequest: (state) => {
       (state.order = null), (state.orderRequest = false);
-    },
-    setOrderNum: (state, action: PayloadAction<string>) => {
-      state.orders.forEach((order) => {
-        if (order.number === Number(action.payload)) {
-          state.orderByNum = order;
-          state.orderNumber = `#${action.payload}`;
-        }
-      });
-    },
-    clearOrderData: (state) => {
-      state.orderByNum = null;
     }
   },
   selectors: {
     getIsLoadingRequest: (state) => state.isLoadingRequest,
     getOrderRequest: (state) => state.orderRequest,
     getOrder: (state) => state.order,
-    getOrderName: (state) => state.name,
-    getOrderNumber: (state) => state.orderNumber,
-    getOrderNum: (state) => state.orderByNum,
-    getOrderIngredients: (state) =>
-      state.orderByNum ? state.orderByNum.ingredients : []
+    getOrderNum: (state) => state.orderByNum
   },
   extraReducers: (builder) => {
     builder.addCase(fetchOrderBurger.pending, (state) => {
@@ -80,7 +51,6 @@ const orderSlice = createSlice({
       state.isLoadingRequest = false;
       state.orderRequest = false;
       state.order = action.payload.order;
-      state.name = action.payload.name;
     });
     builder.addCase(fetchOrderBurger.rejected, (state, action) => {
       state.orderRequest = false;
@@ -88,28 +58,15 @@ const orderSlice = createSlice({
       state.error = action.error.message ?? null;
     });
     builder.addCase(fetchOrderNumber.fulfilled, (state, action) => {
-      state.orders = action.payload.orders;
+      state.orderByNum = action.payload.orders[0];
     });
   }
 });
 
 export default orderSlice.reducer;
 
-export const {
-  setOrderRequest,
-  setOrder,
-  setOrderName,
-  closeModalRequest,
-  setOrderNum,
-  clearOrderData
-} = orderSlice.actions;
+export const { setOrderRequest, setOrder, closeModalRequest } =
+  orderSlice.actions;
 
-export const {
-  getOrderRequest,
-  getOrder,
-  getOrderName,
-  getIsLoadingRequest,
-  getOrderNum,
-  getOrderIngredients,
-  getOrderNumber
-} = orderSlice.selectors;
+export const { getOrderRequest, getOrder, getIsLoadingRequest, getOrderNum } =
+  orderSlice.selectors;

@@ -3,15 +3,8 @@ import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useSelector, useDispatch } from './/..//../services/store';
-import {
-  getOrderIngredientsById,
-  setOrderIngredientsById
-} from './/..//../services/ingredients/ingredients-slice';
-import {
-  getOrderIngredients,
-  getOrderNum,
-  setOrderNum
-} from './/..//../services/order/order-slice';
+import { getIngredients } from './/..//../services/ingredients/ingredients-slice';
+import { getOrderNum } from './/..//../services/order/order-slice';
 import { useParams } from 'react-router-dom';
 import { fetchOrderNumber } from './/..//../services/order/order-action';
 
@@ -20,15 +13,13 @@ export const OrderInfo: FC = () => {
   const dispatch = useDispatch();
   /** TODO: взять переменные orderData и ingredients из стора */
   const orderData = useSelector(getOrderNum);
-  const orderIngredientsId = useSelector(getOrderIngredients);
-  const ingredients = useSelector(getOrderIngredientsById);
+  const ingredients = useSelector(getIngredients);
+
   useEffect(() => {
     if (number) {
       dispatch(fetchOrderNumber(number));
-      dispatch(setOrderNum(number));
-      dispatch(setOrderIngredientsById(orderIngredientsId));
     }
-  }, [number, orderIngredientsId]);
+  }, []);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

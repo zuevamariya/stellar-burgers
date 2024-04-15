@@ -19,18 +19,14 @@ import { useEffect } from 'react';
 import { fetchIngredients } from '../../services/ingredients/ingredients-action';
 import { checkUserAuth } from '../../services/user/user-action';
 import { OnlyAuth, OnlyUnAuth } from '../protected-route';
-import {
-  clearOrderData,
-  getOrderNumber
-} from './/..//../services/order/order-slice';
-import { deleteOrderIngredients } from './/..//../services/ingredients/ingredients-slice';
+import { getOrderNum } from './/..//../services/order/order-slice';
 
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const backgroundLocation = location.state?.background;
-  const orderNumber = useSelector(getOrderNumber);
+  const orderNumber = useSelector(getOrderNum)?.number;
 
   useEffect(() => {
     dispatch(fetchIngredients());
@@ -88,10 +84,8 @@ const App = () => {
             path='/feed/:number'
             element={
               <Modal
-                title={orderNumber}
+                title={orderNumber ? String(orderNumber) : ''}
                 onClose={function (): void {
-                  dispatch(clearOrderData());
-                  dispatch(deleteOrderIngredients());
                   navigate('/feed');
                 }}
               >
@@ -103,10 +97,8 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <Modal
-                title={orderNumber}
+                title={orderNumber ? String(orderNumber) : ''}
                 onClose={function (): void {
-                  dispatch(clearOrderData());
-                  dispatch(deleteOrderIngredients());
                   navigate('/profile/orders');
                 }}
               >

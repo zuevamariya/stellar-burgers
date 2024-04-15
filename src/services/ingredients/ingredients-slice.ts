@@ -32,18 +32,6 @@ export const ingredientSlice = createSlice({
           state.ingredientId = ingredient;
         }
       });
-    },
-    setOrderIngredientsById: (state, action: PayloadAction<string[]>) => {
-      action.payload.forEach((id) => {
-        state.ingredients.forEach((ingredient) => {
-          if (ingredient._id === id) {
-            state.orderIngredientsById.push(ingredient);
-          }
-        });
-      });
-    },
-    deleteOrderIngredients: (state) => {
-      state.orderIngredientsById = [];
     }
   },
   selectors: {
@@ -63,13 +51,8 @@ export const ingredientSlice = createSlice({
   }
 });
 
-export const {
-  setIsIngredientsLoading,
-  setIngredients,
-  setIngredientId,
-  setOrderIngredientsById,
-  deleteOrderIngredients
-} = ingredientSlice.actions;
+export const { setIsIngredientsLoading, setIngredients, setIngredientId } =
+  ingredientSlice.actions;
 
 export default ingredientSlice.reducer;
 
