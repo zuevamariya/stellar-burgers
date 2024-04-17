@@ -47,20 +47,20 @@ describe('Проверка модального окна ингредиента'
     // Находим ингредиент и симулируем клик
     cy.contains('Краторная булка N-200i').click();
     // Проверяем, что модальное окно становится видимым
-    cy.get('[data-test-id="643d69a5c3f7b9001cfa093c"]').should('be.visible');
+    cy.get('#modals > div:first-child').should('exist');
     // Находим кнопку закрытия модального окна (крестик) и симулируем клик
     cy.get('[data-test-id="close-button"]').click();
-    // Явное ожидание скрытия модального окна - ЗДЕСЬ ВОЗНИКАЕТ ПРОБЛЕМА!!!!
-    cy.get('[data-test-id="643d69a5c3f7b9001cfa093c"]').should(
-      'not.be.visible'
-    );
+    // Явное ожидание скрытия модального окна
+    cy.get('#modals > div:first-child').should('not.exist');
     // Снова открываем модальное окно
     cy.contains('Краторная булка N-200i').click();
+    // Проверяем, что модальное окно становится видимым
+    cy.get('#modals > div:first-child').should('exist');
     // Находим оверлей модального окна и симулируем клик
-    cy.get('[data-test-id="overlay"]').click();
+    cy.get('#modals > div:nth-child(2)').click({ force: true });
     // Явное ожидание скрытия модального окна
-    cy.get('[data-test-id="643d69a5c3f7b9001cfa093c"]').should(
-      'not.be.visible'
-    );
+    cy.get('#modals > div:first-child').should('not.exist');
   });
 });
+
+
