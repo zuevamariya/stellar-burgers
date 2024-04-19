@@ -1,66 +1,88 @@
-import { data as mockIngredients } from './ingredients.json';
-import { stubIngredientsAPI } from '../support/commands';
-import { addIngredient } from '../../src/services/burger-constructor/burger-constructor-slice';
-import store from '../../src/services/store';
+/// <reference types="cypress" />
 
 describe('Проверка перехвата запроса к эндпоинту', () => {
-  beforeEach(() => {
-    stubIngredientsAPI();
-  });
-
   it('Должен возвращать моковые данные при запросе к /api/ingredients', () => {
-    cy.request('https://norma.nomoreparties.space/api/ingredients').then(
-      (response) => {
-        expect(response.body.success).to.equal(true);
-        expect(response.body.data).to.have.length(mockIngredients.length);
-      }
-    );
+    cy.intercept('GET', '/ingredients', {
+      fixture: 'ingredients.json'
+    });
   });
 });
 
-describe('Проверка действия добавления ингредиента', () => {
-  it('должно добавить ингредиент в конструктор бургера', () => {
-    const bun = mockIngredients[0];
-    const main = mockIngredients[1];
-    const sauce = mockIngredients[3];
-    // Добавляем ингредиент в моковое хранилище
-    store.dispatch(addIngredient(bun));
-    store.dispatch(addIngredient(main));
-    store.dispatch(addIngredient(sauce));
-
-    // Проверяем, что ингредиент добавлен в состояние мокового хранилища
-    expect(store.getState().burgerConstructor.ingredients).to.have.lengthOf(2);
-    expect(store.getState().burgerConstructor.ingredients[0].name).to.equal(
-      main.name
-    );
-    expect(store.getState().burgerConstructor.ingredients[1].name).to.equal(
-      sauce.name
-    );
-    expect(store.getState().burgerConstructor.bun.name).to.equal(bun.name);
+describe('Проверка добавления ингредиента из списка в конструктор', () => {
+  it('должен добавить ингредиент из списка в конструктор', () => {
+    cy.visit('http://localhost:4000/');
+    const ingredientsToAdd = [
+      'Флюоресцентная булка R2-D3',
+      'Биокотлета из марсианской Магнолии',
+      'Соус Spicy-X',
+      'Хрустящие минеральные кольца'
+    ];
+    cy.wrap(ingredientsToAdd).each((ingredientName) => {
+      cy.get(`[data-test-id="${ingredientName}"]`).contains(`Добавить`).click();
+    });
   });
 });
 
 describe('Проверка модального окна ингредиента', () => {
   it('должно открыться при клике на ингредиент и закрыться при клике на крестик и оверлей', () => {
-    // Переходим на главную страницу
     cy.visit('http://localhost:4000/');
-    // Находим ингредиент и симулируем клик
     cy.contains('Краторная булка N-200i').click();
-    // Проверяем, что модальное окно становится видимым
-    cy.get('#modals > div:first-child').should('exist');
-    // Находим кнопку закрытия модального окна (крестик) и симулируем клик
+    cy.get('#modals > div:first-child').as('modal');
+    cy.get('@modal').should('exist');
     cy.get('[data-test-id="close-button"]').click();
-    // Явное ожидание скрытия модального окна
-    cy.get('#modals > div:first-child').should('not.exist');
-    // Снова открываем модальное окно
-    cy.contains('Краторная булка N-200i').click();
-    // Проверяем, что модальное окно становится видимым
-    cy.get('#modals > div:first-child').should('exist');
-    // Находим оверлей модального окна и симулируем клик
+    cy.get('@modal').should('not.exist');
+
+    cy.contains('Биокотлета из марсианской Магнолии').click();
+    cy.get('@modal').should('exist');
     cy.get('#modals > div:nth-child(2)').click({ force: true });
-    // Явное ожидание скрытия модального окна
-    cy.get('#modals > div:first-child').should('not.exist');
+    cy.get('@modal').should('not.exist');
   });
 });
 
+describe('Процесс создания заказа', () => {
+  it('Собирается бургер', () => {
+    cy.visit('http://localhost:4000/');
 
+    const ingredientsToAdd = [
+      'Флюоресцентная булка R2-D3',
+      'Сыр с астероидной плесенью',
+      'Хрустящие минеральные кольца'
+    ];
+
+    cy.wrap(ingredientsToAdd).each((ingredientName) => {
+      cy.get(`[data-test-id="${ingredientName}"]`).contains('Добавить').click();
+    });
+
+    cy.contains('Оформить заказ').click();
+
+    cy.get('input[name="email"]').type('petrpetrovich@gmail.com');
+    cy.get('input[name="password"]').type('petrpetrovich');
+
+    cy.contains('Войти').click();
+
+    cy.intercept('POST', 'https://norma.nomoreparties.space/api/auth/login', {
+      fixture: 'user.json'
+    }).as('loginRequest');
+
+    cy.wait('@loginRequest').then(() => {
+      cy.contains('Оформить заказ').click();
+
+      cy.intercept('POST', 'https://norma.nomoreparties.space/api/orders', {
+        fixture: 'order.json'
+      }).as('orderRequest');
+
+      cy.wait('@orderRequest').then(() => {
+        cy.get('#modals > div:first-child').should('exist');
+        cy.get('#modals > div:first-child').contains(38390).should('exist');
+      });
+    });
+
+    cy.get('[data-test-id="close-button"]').click();
+
+    cy.get('#modals > div:first-child').should('not.exist');
+
+    cy.contains('[data-test-id="bun-top"]', 'Выберите булки');
+    cy.contains('[data-test-id="ingredient"]', 'Выберите начинку');
+    cy.contains('[data-test-id="bun-bottom"]', 'Выберите булки');
+  });
+});
