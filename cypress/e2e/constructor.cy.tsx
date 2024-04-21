@@ -41,12 +41,8 @@ describe('Проверка модального окна ингредиента'
 
 describe('Процесс создания заказа', () => {
   beforeEach(() => {
-    localStorage.setItem(
-      'accessToken',
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDJkZmVkOTdlZGUwMDAxZDA2MjRmYSIsImlhdCI6MTcxMzU1NDQwOSwiZXhwIjoxNzEzNTU1NjA5fQ.92u5s3JRX2YB3DbhjPXfztQz7r2MOo6U_C6buzYd0Dk'
-    );
-    document.cookie =
-      'refreshToken=a1e0bf9d054f0289127515087bdef11936854dd74561e4f3aa81a5498fe81335754e6a92c4b8d9a0';
+    localStorage.setItem('accessToken', 'RandomToken 12345');
+    document.cookie = 'refreshToken=random12345token';
   });
 
   afterEach(() => {
