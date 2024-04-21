@@ -9,7 +9,7 @@ type TIngredients = {
   orderIngredientsById: TIngredient[];
 };
 
-const initialState: TIngredients = {
+export const initialState: TIngredients = {
   isIngredientsLoading: false,
   ingredients: [],
   ingredientId: null,

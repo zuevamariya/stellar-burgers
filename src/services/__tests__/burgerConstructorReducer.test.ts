@@ -5,7 +5,7 @@ import burgerConstructorReducer, {
   removeIngredient
 } from '../burger-constructor/burger-constructor-slice';
 
-describe('Редьюсер слайса burgerConstructor', () => {
+describe('Проверка редьюсера слайса burgerConstructor', () => {
   const initialBurgerConstructorState = {
     bun: {
       _id: '643d69a5c3f7b9001cfa093c',
