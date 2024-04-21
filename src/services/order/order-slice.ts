@@ -10,7 +10,7 @@ type TOrderBurger = {
   orderByNum: TOrder | null;
 };
 
-const initialState: TOrderBurger = {
+export const initialState: TOrderBurger = {
   isLoadingRequest: false,
   orderRequest: false,
   order: null,
@@ -55,7 +55,8 @@ const orderSlice = createSlice({
     builder.addCase(fetchOrderBurger.rejected, (state, action) => {
       state.orderRequest = false;
       state.isLoadingRequest = false;
-      state.error = action.error.message ?? null;
+      state.error =
+        action.error.message || 'Ошибка при попытке оформления заказа';
     });
     builder.addCase(fetchOrderNumber.fulfilled, (state, action) => {
       state.orderByNum = action.payload.orders[0];

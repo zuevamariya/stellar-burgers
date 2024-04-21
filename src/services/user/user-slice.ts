@@ -14,7 +14,7 @@ type TRegisterLogin = {
   userOrders: TOrder[];
 };
 
-const initialState: TRegisterLogin = {
+export const initialState: TRegisterLogin = {
   isAuthChecked: false,
   user: null,
   error: null,
@@ -46,7 +46,7 @@ const sliceUser = createSlice({
     });
     builder.addCase(fetchRegister.rejected, (state, action) => {
       state.isAuthChecked = true;
-      state.error = action.error.message ?? null;
+      state.error = action.error.message || 'Ошибка при регистрации';
     });
     builder.addCase(fetchLogin.fulfilled, (state, action) => {
       state.isAuthChecked = true;
@@ -54,13 +54,14 @@ const sliceUser = createSlice({
     });
     builder.addCase(fetchLogin.rejected, (state, action) => {
       state.isAuthChecked = true;
-      state.error = action.error.message ?? null;
+      state.error = action.error.message || 'Ошибка при входе';
     });
     builder.addCase(fetchProfileOrders.fulfilled, (state, action) => {
       state.userOrders = action.payload;
     });
     builder.addCase(fetchProfileOrders.rejected, (state, action) => {
-      state.error = action.error.message ?? null;
+      state.error =
+        action.error.message || 'Ошибка при получении заказов пользователя';
     });
     builder.addCase(logout.fulfilled, (state) => {
       state.user = null;
