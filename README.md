@@ -1,7 +1,8 @@
-# Проектная работа React + Redux + Роутинг(авторизация + защищенные роуты) + Тесты(cypress, jest)
+# Проект «Космическая бургерная» - это приложение, где любой может собрать свой бургер и оформить заказ, зарегистрировавшись/войдя в личный кабинет.
+## [Макет](<https://www.figma.com/file/vIywAvqfkOIRWGOkfOnReY/React-Fullstack_-Проектные-задачи-(3-месяца)_external_link?type=design&node-id=0-1&mode=design>)
+### в данном проекте я осуществила навигацию и отображение данных с сервера на страницах конструктора, ингредиента, ленты заказов и личного кабинета. Покрыла тестами функциональность приложения.
 
-[Макет](<https://www.figma.com/file/vIywAvqfkOIRWGOkfOnReY/React-Fullstack_-Проектные-задачи-(3-месяца)_external_link?type=design&node-id=0-1&mode=design>)
-
+Стек: TypeScript, React, Redux, Cypress, Jest, Webpack.
 
 Для запуска тестов Cypress выполните:
 
